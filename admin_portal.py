@@ -51,7 +51,6 @@ if login_type == "Login + Password":
     file = st.file_uploader("Upload an Excel or CSV file", type=["xlsx", "xls", "csv"])
     
     if file is not None:
-        # Read the file
         if file.name.endswith('.csv'):
             df = pd.read_csv(file)
         else:
@@ -197,7 +196,6 @@ elif login_type == "User Input Model":
 
 if exam_questions_file is not None:
     st.subheader("Configure Exam Questions")
-    # Read the file
     if exam_questions_file.name.endswith('.csv'):
         df = pd.read_csv(exam_questions_file)
     else:
@@ -227,7 +225,6 @@ if exam_questions_file is not None:
     options_column = st.selectbox("Select column for Options", [""] + columns, key="options_column")
 
     if all([topic_column, questions_column, answer_type_column, group_column, options_column]):
-        # Rename columns
         df.rename(columns={
             topic_column: "Topic/Subject",
             questions_column: "Questions",
@@ -241,7 +238,6 @@ if exam_questions_file is not None:
         if missing_columns:
             st.error(f"Columns {missing_columns} are missing in the DataFrame.")
         else:
-            # Validate options for multiple choice and single choice
             valid = True
             display_data = []
             image_files = []
@@ -251,7 +247,6 @@ if exam_questions_file is not None:
                 options = str(row["Options"]).strip() if pd.notna(row["Options"]) else ''
                 question = str(row["Questions"]).strip() if pd.notna(row["Questions"]) else ''
 
-                # Handle image paths in questions and options
                 if is_image_file(question):
                     question_display = f'<img src="data:image/png;base64,{image_to_base64(question)}" width="100">'
                     image_files.append(question)
@@ -295,7 +290,6 @@ if exam_questions_file is not None:
             if valid:
                 display_df = pd.DataFrame(display_data)
                 
-                # Display the DataFrame using st.markdown with HTML table
                 html_table = display_df.to_html(escape=False, index=False)
                 st.markdown(html_table, unsafe_allow_html=True)
 
@@ -317,7 +311,6 @@ if uploaded_file is not None and exam_name and login_type:
     elif login_type == "User Input Model":
         data_dict["user_inputs"] = user_inputs
     
-    # Add exam questions data to JSON if present
     if exam_questions_csv_filename is not None:
         data_dict["exam_questions_csv_filename"] = exam_questions_csv_filename
 
